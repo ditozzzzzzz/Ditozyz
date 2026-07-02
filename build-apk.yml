@@ -1,0 +1,51 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL website yang mau di-wrap jadi APK'
+        required: true
+      app_name:
+        description: 'Nama aplikasi'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ====================================================================
+      # TODO: Ganti bagian ini dengan tool web-to-apk pilihanmu.
+      # Beberapa opsi umum:
+      #   - Bubblewrap (Google, buat Trusted Web Activity):
+      #       npm install -g @bubblewrap/cli
+      #       bubblewrap init --manifest="${{ github.event.inputs.url }}/manifest.json"
+      #       bubblewrap build
+      #   - PWABuilder CLI
+      #   - Cordova/Capacitor project template yang sudah kamu siapkan di repo ini
+      #
+      # Yang penting: di akhir step ini, HARUS ada 1 file .apk di suatu folder,
+      # misalnya ./output/app.apk
+      # ====================================================================
+      - name: Build APK (placeholder — sesuaikan)
+        run: |
+          echo "URL: ${{ github.event.inputs.url }}"
+          echo "App name: ${{ github.event.inputs.app_name }}"
+          mkdir -p output
+          # Contoh placeholder — HAPUS baris ini dan ganti dengan build tool asli:
+          # touch output/app.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-apk
+          path: output/*.apk
+          retention-days: 1
