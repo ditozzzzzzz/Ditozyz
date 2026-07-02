@@ -9,6 +9,10 @@ on:
       app_name:
         description: 'Nama aplikasi'
         required: true
+      theme_color:
+        description: 'Warna tema (hex, contoh #1976D2)'
+        required: false
+        default: '#1976D2'
 
 jobs:
   build:
@@ -31,7 +35,8 @@ jobs:
         run: |
           gradle assembleDebug \
             -PtargetUrl="${{ github.event.inputs.url }}" \
-            -PappName="${{ github.event.inputs.app_name }}"
+            -PappName="${{ github.event.inputs.app_name }}" \
+            -PthemeColor="${{ github.event.inputs.theme_color }}"
 
       - name: Rename APK
         run: |
