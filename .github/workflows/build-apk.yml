@@ -17,31 +17,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          node-version: '20'
+          distribution: 'temurin'
+          java-version: '17'
 
-      # ====================================================================
-      # TODO: Ganti bagian ini dengan tool web-to-apk pilihanmu.
-      # Beberapa opsi umum:
-      #   - Bubblewrap (Google, buat Trusted Web Activity):
-      #       npm install -g @bubblewrap/cli
-      #       bubblewrap init --manifest="${{ github.event.inputs.url }}/manifest.json"
-      #       bubblewrap build
-      #   - PWABuilder CLI
-      #   - Cordova/Capacitor project template yang sudah kamu siapkan di repo ini
-      #
-      # Yang penting: di akhir step ini, HARUS ada 1 file .apk di suatu folder,
-      # misalnya ./output/app.apk
-      # ====================================================================
-      - name: Build APK (placeholder — sesuaikan)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK
+        working-directory: android-template
         run: |
-          echo "URL: ${{ github.event.inputs.url }}"
-          echo "App name: ${{ github.event.inputs.app_name }}"
+          gradle assembleDebug \
+            -PtargetUrl="${{ github.event.inputs.url }}" \
+            -PappName="${{ github.event.inputs.app_name }}"
+
+      - name: Rename APK
+        run: |
           mkdir -p output
-          # Contoh placeholder — HAPUS baris ini dan ganti dengan build tool asli:
-          # touch output/app.apk
+          cp android-template/app/build/outputs/apk/debug/app-debug.apk output/app.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
