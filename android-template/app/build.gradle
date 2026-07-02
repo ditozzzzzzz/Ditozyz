@@ -15,9 +15,21 @@ android {
 
         def targetUrl = project.findProperty('targetUrl') ?: 'https://example.com'
         def appName = project.findProperty('appName') ?: 'WebApp'
+        def defaultColor = '#1976D2'
+        def themeColorInput = (project.findProperty('themeColor') ?: defaultColor).toString()
+        if (!(themeColorInput ==~ /^#[0-9A-Fa-f]{6}$/)) { themeColorInput = defaultColor }
+
+        def rgb = Integer.parseInt(themeColorInput.substring(1), 16)
+        def r = (rgb >> 16) & 0xFF
+        def g = (rgb >> 8) & 0xFF
+        def b = rgb & 0xFF
+        def darkColor = String.format("#%02X%02X%02X", (int)(r * 0.7), (int)(g * 0.7), (int)(b * 0.7))
 
         buildConfigField "String", "TARGET_URL", "\"${targetUrl}\""
         resValue "string", "app_name", appName
+        resValue "color", "colorPrimary", themeColorInput
+        resValue "color", "colorPrimaryDark", darkColor
+        resValue "color", "colorAccent", "#FF4081"
     }
 
     buildFeatures {
