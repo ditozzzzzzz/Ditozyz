@@ -26,6 +26,7 @@ android {
         def darkColor = String.format("#%02X%02X%02X", (int)(r * 0.7), (int)(g * 0.7), (int)(b * 0.7))
 
         buildConfigField "String", "TARGET_URL", "\"${targetUrl}\""
+        buildConfigField "long", "BUILD_TIMESTAMP", "${System.currentTimeMillis()}L"
         resValue "string", "app_name", appName
         resValue "color", "colorPrimary", themeColorInput
         resValue "color", "colorPrimaryDark", darkColor
