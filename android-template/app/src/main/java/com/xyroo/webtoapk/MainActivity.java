@@ -2,6 +2,7 @@ package com.xyroo.webtoapk;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebResourceError;
@@ -9,6 +10,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Cek apakah APK ini sudah kedaluwarsa (30 hari sejak build)
+        long expiryMillis = BuildConfig.BUILD_TIMESTAMP + 30L * 24 * 60 * 60 * 1000;
+        if (System.currentTimeMillis() > expiryMillis) {
+            TextView expiredView = new TextView(this);
+            expiredView.setText("Aplikasi ini sudah kedaluwarsa.\nSilakan hubungi admin untuk versi terbaru.");
+            expiredView.setGravity(Gravity.CENTER);
+            expiredView.setTextSize(16);
+            expiredView.setPadding(48, 48, 48, 48);
+            setContentView(expiredView);
+            return;
+        }
+
+        // Fullscreen: sembunyikan status bar & nav bar
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -110,4 +125,4 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-    }
+}
